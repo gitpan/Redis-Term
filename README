@@ -1,4 +1,4 @@
-Redis-Term version 0.01
+Redis-Term version 0.02
 =======================
 
 Small redis client in perl.

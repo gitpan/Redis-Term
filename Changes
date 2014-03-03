@@ -4,3 +4,6 @@ Revision history for Perl extension Redis::Term.
 	- original version; created by h2xs 1.23 with options
 		-n Redis::Term -AX
 
+0.02  Mon Mar  3 18:40:31 2014
+	- add pm file for cpan
+
