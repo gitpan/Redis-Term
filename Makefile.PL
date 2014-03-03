@@ -1,0 +1,17 @@
+use 5.008008;
+use ExtUtils::MakeMaker;
+WriteMakefile(
+    NAME              => 'Redis::Term',
+    VERSION_FROM      => 'Redist', 
+	EXE_FILES         => [ "redist" ],
+    PREREQ_PM         => {
+                             'Term::ReadLine' => 1.14,
+                             'Term::ReadLine::Perl' => 1.0303,
+                             'Text::TabularDisplay' => 1.35,
+                             'Redis' => 1.972,
+                             'Getopt::Std' => 1.07,
+                         },
+    ($] >= 5.005 ?
+      (ABSTRACT_FROM  => 'Redist', 
+       AUTHOR         => 'Chen Gang <yikuyiku.com@gmail.com>') : ()),
+);
