@@ -9,7 +9,7 @@ WriteMakefile(
                              'Term::ReadLine::Perl' => 1.0303,
                              'Text::TabularDisplay' => 1.35,
                              'Redis' => 1.972,
-                             'Getopt::Std' => 1.07,
+                             'Getopt::Std' => 0,
                          },
     ($] >= 5.005 ?
       (ABSTRACT_FROM  => 'lib/Redis/Term.pm',
