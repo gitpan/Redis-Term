@@ -12,3 +12,6 @@ Revision history for Perl extension Redis::Term.
 
 0.04  Tue Mar  4 09:53:58 2014
 	- Add error handle
+
+0.05  Tue Mar  4 09:59:58 2014
+	- Require version 2.30 of Term::ReadKey
