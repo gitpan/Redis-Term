@@ -71,6 +71,9 @@ while ( defined( $_ = $term->readline($prompt) ) ) {
         if (/(quit|exit)/) {
             goto BYE;
         }
+        elsif (!$_) {
+            last SWITCH;
+        }
         elsif (/help/) {
             print $help_text;
             last SWITCH;
@@ -86,8 +89,15 @@ while ( defined( $_ = $term->readline($prompt) ) ) {
         }
         elsif ( exists( $command{ lc( $input[0] ) } ) ) {
             my $c      = shift @input;
-            my $result = $r->$c(@input);
-            print "$result\n" if $result;
+			eval {
+				my $result = $r->$c(@input);
+				print "$result\n" if $result;
+			};
+			if($@)
+			{
+				print "ERROR: Wrong arguments for command '$_'\n";
+			}
+
             last SWITCH;
         }
 		else

@@ -10,3 +10,5 @@ Revision history for Perl extension Redis::Term.
 0.03  Tue Mar  4 09:43:58 2014
 	- Require any version of Getopt::Std
 
+0.04  Tue Mar  4 09:53:58 2014
+	- Add error handle

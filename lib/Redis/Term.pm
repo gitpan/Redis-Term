@@ -4,7 +4,7 @@ use 5.008008;
 use strict;
 use warnings;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 1;
 __END__
@@ -60,7 +60,7 @@ Execute 'redist', then input any redis command you want.
 
 Recommended to install using cpanm, like this.
 
-  curl -L -k http://cpanmin.us | perl - Redis::Term
+  curl -L -k http://cpanmin.us | perl - -n Redis::Term
 
 
 =head2 EXPORT
