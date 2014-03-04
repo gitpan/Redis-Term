@@ -4,7 +4,7 @@ use 5.008008;
 use strict;
 use warnings;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 1;
 __END__
@@ -15,7 +15,7 @@ Redis::Term - Redis Client Terminal
 
 =head1 SYNOPSIS
 
-  [chengang@local]# redist -h127.0.0.1 -P6379
+  [chengang@local]# redist -h127.0.0.1 -P6379 -ppasswd
   Welcome to the Redis Terminal.  Commands end with ENTER.
   Your Redis connection name is 1393840471
   Connected to: 127.0.0.1:6379
@@ -56,6 +56,15 @@ Small redis client in perl.
 Execute 'redist', then input any redis command you want.
 
 
+=head1 ARGV
+
+-h Redis server IP or HOSTNAME, default 127.0.0.1
+
+-P Redis server port, default 6379
+
+-p password if have any
+
+
 =head1 INSTALL
 
 Recommended to install using cpanm, like this.
@@ -63,9 +72,9 @@ Recommended to install using cpanm, like this.
   curl -L -k http://cpanmin.us | perl - -n Redis::Term
 
 
-=head2 EXPORT
+=head1 EXPORT
 
-Just a execute script, nothing will be exported.
+Nothing will be exported.
 
 
 =head1 AUTHOR
