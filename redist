@@ -17,27 +17,33 @@ use Redis;
 use Term::ReadLine;
 use Term::ReadLine::Perl;
 use Text::TabularDisplay;
+use Redis::Term;
 
+$0 = "redist " . join " ", @ARGV;
 my %opts;
-getopt( 'hP', \%opts );
-my $addr = $opts{'h'} || '127.0.0.1';
-my $port = $opts{'P'} || 6379;
-my $name = time;
+getopt( 'hpP', \%opts );
+my $addr   = $opts{'h'} || '127.0.0.1';
+my $port   = $opts{'P'} || 6379;
+my $passwd = $opts{'p'} || '';
+my $name   = time;
 
-my $r = Redis->new(
-    server    => "$addr:$port",
-    name      => "$name",
-    every     => 1000,            #milisecs
-    cnx_timeout => 2,             #seconds
+my %conf = (
+    server      => "$addr:$port",
+    name        => "$name",
+    every       => 1000,            #milisecs
+    cnx_timeout => 2,               #seconds
 );
+$conf{'password'} = $passwd if $passwd;
 
+my $r          = Redis->new(%conf);
 my $redis_info = $r->info;
 
 print <<WELCOME;
 Welcome to the Redis Terminal.  Commands end with ENTER.
 Your Redis connection name is $name
 Connected to: $addr:$port
-Redis version: $redis_info->{redis_version}-$redis_info->{redis_mode}
+Redis Server version: $redis_info->{redis_version}-$redis_info->{redis_mode}
+Redis Term version: $Redis::Term::VERSION
 
 Copyright (c) 2014-2015, Chen Gang. This is free software.
 
@@ -71,7 +77,7 @@ while ( defined( $_ = $term->readline($prompt) ) ) {
         if (/(quit|exit)/) {
             goto BYE;
         }
-        elsif (!$_) {
+        elsif ( !$_ ) {
             last SWITCH;
         }
         elsif (/help/) {
@@ -88,23 +94,21 @@ while ( defined( $_ = $term->readline($prompt) ) ) {
             last SWITCH;
         }
         elsif ( exists( $command{ lc( $input[0] ) } ) ) {
-            my $c      = shift @input;
-			eval {
-				my $result = $r->$c(@input);
-				print "$result\n" if $result;
-			};
-			if($@)
-			{
-				print "ERROR: Wrong arguments for command '$_'\n";
-			}
+            my $c = shift @input;
+            eval {
+                my $result = $r->$c(@input);
+                print "$result\n" if $result;
+            };
+            if ($@) {
+                print "ERROR: Wrong arguments for command '$_'\n";
+            }
 
             last SWITCH;
         }
-		else
-		{
-			print "ERROR: No command named '$input[0]'\n";
+        else {
+            print "ERROR: No command named '$input[0]'\n";
             last SWITCH;
-		}
+        }
     }
 }
 
