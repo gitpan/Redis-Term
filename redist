@@ -42,7 +42,7 @@ print <<WELCOME;
 Welcome to the Redis Terminal.  Commands end with ENTER.
 Your Redis connection name is $name
 Connected to: $addr:$port
-Redis Server version: $redis_info->{redis_version}-$redis_info->{redis_mode}
+Redis Server version: $redis_info->{redis_version}
 Redis Term version: $Redis::Term::VERSION
 
 Copyright (c) 2014-2015, Chen Gang. This is free software.
