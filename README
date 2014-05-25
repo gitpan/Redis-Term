@@ -1,4 +1,4 @@
-Redis-Term version 0.07
+Redis-Term version 0.08
 =======================
 
 Small redis client in perl.
@@ -11,13 +11,7 @@ Recommended to install using cpanm, like this.
 
 DEPENDENCIES
 
-This module requires these other modules and libraries:
-
-  blah blah blah
-
-COPYRIGHT AND LICENCE
-
-Put the correct copyright and licence information here.
+  no dependencies
 
 Copyright (C) 2014 by Chen Gang
 

@@ -62,7 +62,7 @@ foreach ( sort keys %help_hash ) {
     my $group_name = $_;
     $help_text .= "\n" . uc($group_name) . "\n";
     my $tb = Text::TabularDisplay->new(qw(Command Description));
-    foreach ( sort keys $help_hash{$group_name} ) {
+    foreach ( sort keys %{$help_hash{$group_name}} ) {
         my $command_name = $_;
         $command{$command_name} = 1;
         $tb->add( $command_name, $help_hash{$group_name}{$_} );
@@ -87,7 +87,7 @@ while ( defined( $_ = $term->readline($prompt) ) ) {
         elsif (/info/) {
             my $info = $r->info;
             my $tb   = Text::TabularDisplay->new(qw(Variable_name Value));
-            foreach ( keys $info ) {
+            foreach ( keys %{$info} ) {
                 $tb->add( $_, $info->{$_} );
             }
             print $tb->render, "\n";
@@ -135,11 +135,18 @@ __DATA__
     quit   => "Close the connection",
     select => "Change the selected database for the current connection",
   },
+  "hyperloglog",
+  {
+    pfadd   => "Adds the specified elements to the specified HyperLogLog.",
+    pfcount => "Return the approximated cardinality of the set(s) observed by the HyperLogLog at key(s).",
+    pfmerge => "Merge N different HyperLogLogs into a single one.",
+  },
   "string",
   {
     append      => "Append a value to a key",
     bitcount    => "Count set bits in a string",
     bitop       => "Perform bitwise operations between strings",
+    bitpos      => "Find first bit set or clear in a string",
     decr        => "Decrement the integer value of a key by one",
     decrby      => "Decrement the integer value of a key by the given number",
     get         => "Get the value of a key",
@@ -167,10 +174,13 @@ __DATA__
     zcount => "Count the members in a sorted set with scores within the given values",
     zincrby => "Increment the score of a member in a sorted set",
     zinterstore => "Intersect multiple sorted sets and store the resulting sorted set in a new key",
+    zlexcount => "Count the number of members in a sorted set between a given lexicographical range",
     zrange => "Return a range of members in a sorted set, by index",
+    zrangebylex => "Return a range of members in a sorted set, by lexicographical range",
     zrangebyscore => "Return a range of members in a sorted set, by score",
     zrank => "Determine the index of a member in a sorted set",
     zrem => "Remove one or more members from a sorted set",
+    zremrangebylex => "Remove all members in a sorted set between the given lexicographical range",
     zremrangebyrank => "Remove all members in a sorted set within the given indexes",
     zremrangebyscore => "Remove all members in a sorted set within the given scores",
     zrevrange => "Return a range of members in a sorted set, by index, with scores ordered from high to low",
