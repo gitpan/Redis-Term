@@ -16,6 +16,7 @@ use Getopt::Std;
 use Redis;
 use Term::ReadLine;
 use Term::ReadLine::Perl;
+use Term::ReadKey;
 use Text::TabularDisplay;
 use Redis::Term;
 
@@ -62,7 +63,7 @@ foreach ( sort keys %help_hash ) {
     my $group_name = $_;
     $help_text .= "\n" . uc($group_name) . "\n";
     my $tb = Text::TabularDisplay->new(qw(Command Description));
-    foreach ( sort keys %{$help_hash{$group_name}} ) {
+    foreach ( sort keys %{ $help_hash{$group_name} } ) {
         my $command_name = $_;
         $command{$command_name} = 1;
         $tb->add( $command_name, $help_hash{$group_name}{$_} );
@@ -71,6 +72,8 @@ foreach ( sort keys %help_hash ) {
 }
 
 while ( defined( $_ = $term->readline($prompt) ) ) {
+    $_ =~ s/\s*$//g;
+    $_ =~ s/^\s*//g;
     my @input = split /\s/, $_;
   SWITCH:
     {
@@ -80,8 +83,28 @@ while ( defined( $_ = $term->readline($prompt) ) ) {
         elsif ( !$_ ) {
             last SWITCH;
         }
-        elsif (/help/) {
-            print $help_text;
+        elsif (/^help$/) {
+            print "Type:\thelp [group]\n";
+            foreach ( sort keys %help_hash ) {
+                print "\thelp $_\n";
+            }
+            print "\thelp all\n";
+            last SWITCH;
+        }
+        elsif (/^help all$/) {
+            print "$help_text\n";
+            last SWITCH;
+        }
+        elsif (/^help [a-z]+$/) {
+            my ($group_name) = $_ =~ /^help ([a-z]+)$/;
+            print "\n" . uc($group_name) . "\n";
+            my $tb = Text::TabularDisplay->new(qw(Command Description));
+            foreach ( sort keys %{ $help_hash{$group_name} } ) {
+                my $command_name = $_;
+                $command{$command_name} = 1;
+                $tb->add( $command_name, $help_hash{$group_name}{$_} );
+            }
+            print $tb->render . "\n";
             last SWITCH;
         }
         elsif (/info/) {
@@ -97,7 +120,8 @@ while ( defined( $_ = $term->readline($prompt) ) ) {
             my $c = shift @input;
             eval {
                 my $result = $r->$c(@input);
-                print "$result\n" if $result;
+                print tb_dump($result);
+                print "\n";
             };
             if ($@) {
                 print "ERROR: Wrong arguments for command '$_'\n";
@@ -114,6 +138,31 @@ while ( defined( $_ = $term->readline($prompt) ) ) {
 
 BYE:
 print "bye\n";
+
+sub tb_dump {
+    my $var    = shift;
+    my $typeof = ref($var);
+    if ( $typeof eq 'SCALAR' ) {
+        return $var;
+    }
+    elsif ( $typeof eq 'ARRAY' ) {
+        my $tb = Text::TabularDisplay->new(qw(Value));
+        foreach ( @{$var} ) {
+            $tb->add($_);
+        }
+        return $tb->render, "\n";
+    }
+    elsif ( $typeof eq 'HASH' ) {
+        my $tb = Text::TabularDisplay->new(qw(Key Value));
+        foreach ( keys %{$var} ) {
+            $tb->add( $_, $var->{$_} );
+        }
+        return $tb->render, "\n";
+    }
+    else {
+        return $var;
+    }
+}
 
 1;
 __DATA__
