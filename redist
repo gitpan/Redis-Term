@@ -119,8 +119,8 @@ while ( defined( $_ = $term->readline($prompt) ) ) {
         elsif ( exists( $command{ lc( $input[0] ) } ) ) {
             my $c = shift @input;
             eval {
-                my $result = $r->$c(@input);
-                print tb_dump($result);
+                my @result = $r->$c(@input);
+                print tb_dump(\@result);
                 print "\n";
             };
             if ($@) {
