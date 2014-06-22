@@ -13,7 +13,9 @@ At 2014-02-25 Beijing
 use strict;
 use warnings;
 use Getopt::Std;
+use Storable qw(retrieve store);
 use Redis;
+use List::MoreUtils qw(uniq);
 use Term::ReadLine;
 use Term::ReadLine::Perl;
 use Term::ReadKey;
@@ -52,9 +54,18 @@ Type 'help' for help.
 
 WELCOME
 
+my $cmd_history_file = $ENV{HOME} . '/.redist_history';
+my $cmd_history;
+my @cmd_history;
+eval { $cmd_history = retrieve $cmd_history_file if -s $cmd_history_file; };
+@cmd_history = @$cmd_history if $cmd_history;
 my $term   = Term::ReadLine->new("redist");
 my $prompt = "redis> ";
 $term->ornaments(0);
+
+foreach (@cmd_history) {
+    $term->addhistory($_);
+}
 my $help_data = do { local $/; <DATA> };
 my %help_hash = eval($help_data);
 my %command;
@@ -77,6 +88,7 @@ while ( defined( $_ = $term->readline($prompt) ) ) {
     my @input = split /\s/, $_;
   SWITCH:
     {
+        push @cmd_history, $_ if $_;
         if (/(quit|exit)/) {
             goto BYE;
         }
@@ -120,7 +132,7 @@ while ( defined( $_ = $term->readline($prompt) ) ) {
             my $c = shift @input;
             eval {
                 my @result = $r->$c(@input);
-                print tb_dump(\@result);
+                print tb_dump( \@result );
                 print "\n";
             };
             if ($@) {
@@ -137,6 +149,8 @@ while ( defined( $_ = $term->readline($prompt) ) ) {
 }
 
 BYE:
+@cmd_history = uniq @cmd_history;
+store \@cmd_history, $cmd_history_file;
 print "bye\n";
 
 sub tb_dump {

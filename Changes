@@ -33,3 +33,6 @@ Revision history for Perl extension Redis::Term.
 
 0.11  Mon Jun 16 20:54:50 2014
 	- Optimize output
+
+0.12  Sun Jun 22 17:25:59 2014
+    - Remember command history when exit

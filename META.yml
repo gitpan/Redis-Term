@@ -19,9 +19,11 @@ no_index:
     - inc
 requires:
   Getopt::Std: 0
+  List::MoreUtils: 0
   Redis: 1.972
+  Storable: 0
   Term::ReadKey: 2.3
   Term::ReadLine: 1.14
   Term::ReadLine::Perl: 1.0303
   Text::TabularDisplay: 1.35
-version: 0.11
+version: 0.12

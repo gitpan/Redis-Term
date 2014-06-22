@@ -11,6 +11,8 @@ WriteMakefile(
                              'Text::TabularDisplay' => 1.35,
                              'Redis' => 1.972,
                              'Getopt::Std' => 0,
+                             'List::MoreUtils' => 0,
+                             'Storable' => 0,
                          },
     ($] >= 5.005 ?
       (ABSTRACT_FROM  => 'lib/Redis/Term.pm',
